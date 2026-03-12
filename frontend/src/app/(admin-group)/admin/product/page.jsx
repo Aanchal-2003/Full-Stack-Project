@@ -45,8 +45,7 @@ export default async function page() {
 
           <tbody>
             {
-              productJSON &&
-              productJSON?.product.map((product) => (
+              (productJSON?.product || []).map((product) => (
                 <tr
                   key={product._id}
                   className="border-t hover:bg-orange-50 transition"

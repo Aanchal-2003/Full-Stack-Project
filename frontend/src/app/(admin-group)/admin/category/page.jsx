@@ -42,8 +42,7 @@ export default async function page() {
 
                     <tbody>
                         {
-                            categoriesData.category &&
-                            categoriesData?.category.map((cat) => (
+                            (categoriesData?.category || []).map((cat) => (
                                 <tr
                                     key={cat._id}
                                     className="border-t hover:bg-orange-50 transition"

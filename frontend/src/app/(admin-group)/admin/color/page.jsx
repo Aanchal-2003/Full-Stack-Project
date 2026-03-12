@@ -42,8 +42,7 @@ export default async function page() {
 
                     <tbody>
                         {
-                            color &&
-                            color?.data.map((color) => (
+                            (color?.data || []).map((color) => (
                                 <tr
                                     key={color._id}
                                     className="border-t hover:bg-orange-50 transition"
