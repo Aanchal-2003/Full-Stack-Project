@@ -10,8 +10,16 @@ export default function AuthPage() {
     const [isLogin, setIsLogin] = useState(true);
     const [showPass, setShowPass] = useState(false);
     const [showConfirmPass, setShowConfirmPass] = useState(false);
-    const cart = JSON.parse(localStorage.getItem("cart"));
-    const cartData = cart != null ? cart.data : null;
+    // const cart = JSON.parse(localStorage.getItem("cart"));
+    // const cartData = cart != null ? cart.data : null;
+
+    const [cartData, setCartData] = useState(null);
+
+    React.useEffect(() => {
+        const cart = JSON.parse(localStorage.getItem("cart"));
+        const data = cart != null ? cart.data : null;
+        setCartData(data);
+    }, []);
 
     function submitHandler(e) {
         e.preventDefault()
