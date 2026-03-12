@@ -1,14 +1,39 @@
 import { axiosAPIinstance } from "@/utils/helper"
 
 
-const getCategories = () => {
-    return axiosAPIinstance.get("category").then(
+const getCategories = (queryObject = {}) => {
+    const query = new URLSearchParams();
+    if (queryObject.limit) {
+        query.append("limit", queryObject.limit)
+    }
+
+    if (queryObject.status) {
+        query.append("status", queryObject.status)
+    }
+
+    if (queryObject.is_home) {
+        query.append("is_home", queryObject.is_home)
+    }
+
+    if (queryObject.is_best) {
+        query.append("is_best", queryObject.is_best)
+    }
+
+    if (queryObject.is_top) {
+        query.append("is_top", queryObject.is_top)
+    }
+
+    return axiosAPIinstance.get(`category/?${query.toString()}`).then(
         (response) => {
-            return response.data
+            if (response.data.success == true) {
+                return response.data.data
+            } else {
+                return []
+            }
         }
     ).catch(
         (error) => {
-            return null
+            return []
         }
     )
 }
@@ -17,14 +42,18 @@ const getCategories = () => {
 const getCategoryById = (id) => {
     return axiosAPIinstance.get(`category/${id}`).then(
         (response) => {
-            return response.data
+            if (response.data.success == true) {
+                return response.data
+            } else {
+                return {}
+            }
         }
     ).catch(
         (error) => {
-            return null
+            return {}
         }
     )
 }
 
 
-export { getCategories, getCategoryById}
+export { getCategories, getCategoryById }

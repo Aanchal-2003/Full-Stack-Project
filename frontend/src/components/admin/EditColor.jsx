@@ -2,8 +2,9 @@
 
 import { useRef } from "react";
 import { axiosAPIinstance, notify, slugCreate } from "@/utils/helper";
-import { FiTag, FiLink, FiImage } from "react-icons/fi";
+import { FiTag, FiLink } from "react-icons/fi";
 import { useRouter } from "next/navigation";
+import { MdInvertColors } from "react-icons/md";
 
 export default function EditColor({ color }) {
     const router = useRouter();
@@ -32,6 +33,7 @@ export default function EditColor({ color }) {
             }
         ).catch(
             (error) => {
+                console.log(error)
                 notify(error?.response?.data?.message, false)
             }
         )
@@ -91,10 +93,11 @@ export default function EditColor({ color }) {
                         Color code
                     </label>
                     <div className="mt-2 flex items-center gap-3 border rounded-xl px-4 py-3">
-                        <FiImage className="text-gray-400" />
+                        <MdInvertColors className="text-gray-400" />
                         <input
-                            type="file"
+                            type="color"
                             name="code"
+                            defaultValue={color?.code}
                             className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
                             file:rounded-lg file:border-0
                             file:text-sm file:font-semibold
@@ -111,14 +114,14 @@ export default function EditColor({ color }) {
                 <div className="flex items-center justify-end gap-4 pt-6">
                     <button
                         type="button"
-                        className="px-6 py-2 rounded-xl border text-gray-600 hover:bg-gray-100"
+                        className="px-6 py-2 cursor-pointer rounded-xl border text-gray-600 hover:bg-gray-100"
                     >
                         Cancel
                     </button>
 
                     <button
                         type="submit"
-                        className="px-6 py-2 rounded-xl bg-[#ff7b00] text-white hover:opacity-90"
+                        className="px-6 py-2 cursor-pointer rounded-xl bg-[#ff7b00] text-white hover:opacity-90"
                     >
                         Edit Color
                     </button>

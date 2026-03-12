@@ -1,8 +1,9 @@
+const categoryModel = require("../models/category.models");
 const productModel = require("../models/product.models");
+const brandModel = require("../models/brand.models");
 const { uniqueName } = require("../utils/helper");
 const { sendServerError, sendAllFieldsRequired, sendAlreadyExist, sendCreated, sendSuccess, sendNotFound, sendUpdated, sendDeleted } = require("../utils/responseHelpers");
 const fs = require("fs");
-
 
 const create = async (req, res) => {
     try {
@@ -29,7 +30,48 @@ const create = async (req, res) => {
 
 const get = async (req, res) => {
     try {
-        const product = await productModel.find().populate([
+        const query = req.query;
+        const searchFilter = {};
+        const sortFilter = {};
+        const limit = query.limit != null ? query.limit : 0;
+
+       if (query.sort === "price_asc") {
+            sortFilter.final_price = 1;
+        } else if (query.sort === "price_desc") {
+            sortFilter.final_price = -1;
+        } else {
+            sortFilter.createdAt = -1
+        }
+
+        if (query.id) searchFilter._id = query.id;
+        if (query.status) searchFilter.status = query.status == "true" ? true : false;
+        if (query.is_home) searchFilter.is_home = query.is_home == "true" ? true : false;
+        if (query.stock) searchFilter.stock = query.stock == "true" ? true : false;
+        if (query.is_best_seller) searchFilter.is_best_seller = query.is_best_seller == "true" ? true : false;
+        if (query.is_featured) searchFilter.is_featured = query.is_featured == "true" ? true : false;
+        if (query.is_hot) searchFilter.is_hot = query.is_hot == "true" ? true : false;
+
+        if (query.categorySlug) {
+            const category = await categoryModel.findOne({ slug: query.categorySlug });
+            searchFilter.category_id = category._id;
+        }
+
+        if (query.brandSlug) {
+            const brand = await brandModel.findOne({ slug: query.brandSlug });
+            searchFilter.brand_id = brand._id;
+        }
+
+        if (query.color_ids) {
+            searchFilter.color_ids = query.color_ids;
+        }
+
+        if (query.max_price && query.min_price) {
+            searchFilter.final_price = {
+                $gte: Number(query.min_price),
+                $lte: Number(query.max_price)
+            }
+        }
+        const product = await productModel.find(searchFilter).populate([
             {
                 path: "category_id",
                 select: "name slug"
@@ -42,10 +84,10 @@ const get = async (req, res) => {
                 path: "brand_id",
                 select: "name slug"
             }
-        ]);
+        ]).sort(sortFilter).limit(limit);
+        
         return sendSuccess(res, "Product Find", { product, imageBaseUrl: "http://localhost:5000/images/product/" });
     } catch (error) {
-        console.log(error)
         return sendServerError(res);
     }
 }
@@ -94,9 +136,8 @@ const getById = async (req, res) => {
         const id = req.params.id;
         const product = await productModel.findById(id);
         if (!product) return sendNotFound(res);
-        return sendSuccess(res, "Product Find", product);
+        return sendSuccess(res, "Product Find", { product, imageBaseUrl: "http://localhost:5000/images/product/" });
     } catch (error) {
-        console.log(error)
         return sendServerError(res)
     }
 }
@@ -116,6 +157,7 @@ const updateById = async (req, res) => {
         if (original_price) update.original_price = original_price;
         if (discount_percentage) update.discount_percentage = discount_percentage;
         if (final_price) update.final_price = final_price;
+        if (category_id) update.category_id = category_id;
         if (color_ids) update.color_ids = color_ids;
         if (brand_id) update.brand_id = brand_id;
 
@@ -167,24 +209,31 @@ const otherImageAdd = async (req, res) => {
         const other_images_name = product.other_images;
 
         if (Array.isArray(imageFile)) {
-            console.log("Hello")
+            const all_promise = imageFile.map(async (file) => {
+                const image = uniqueName(file.name);
+                const destination = "./public/images/product/other/" + image;
+                other_images_name.push(image);
+                return await file.mv(destination);
+            })
+
+            await Promise.all(all_promise);
+
         } else {
             const image = uniqueName(imageFile.name);
             const destination = "./public/images/product/other/" + image;
-            other_images_name.push(image)
+            other_images_name.push(image);
             await imageFile.mv(destination)
         }
 
         product.other_images = other_images_name;
         await product.save();
-        return sendCreated(res);
+        return sendCreated(res, "Added Successfully");
 
     } catch (error) {
         console.log(error)
         return sendServerError(res);
     }
 }
-
 
 module.exports = {
     create,

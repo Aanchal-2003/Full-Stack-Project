@@ -16,7 +16,15 @@ function slugCreate(name) {
 }
 
 const axiosAPIinstance = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL
+    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+    withCredentials: true
 });
 
-export { notify, slugCreate, axiosAPIinstance }
+function formatIndianCurrency(amount) {
+    return amount?.toLocaleString('en-IN', {
+        style: 'currency',
+        currency: 'INR'
+    });
+}
+
+export { notify, slugCreate, axiosAPIinstance, formatIndianCurrency }

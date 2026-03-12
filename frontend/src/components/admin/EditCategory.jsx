@@ -114,14 +114,14 @@ export default function EditCategory({ category }) {
                 <div className="flex items-center justify-end gap-4 pt-6">
                     <button
                         type="button"
-                        className="px-6 py-2 rounded-xl border text-gray-600 hover:bg-gray-100"
+                        className="px-6 py-2 cursor-pointer rounded-xl border text-gray-600 hover:bg-gray-100"
                     >
                         Cancel
                     </button>
 
                     <button
                         type="submit"
-                        className="px-6 py-2 rounded-xl bg-[#ff7b00] text-white hover:opacity-90"
+                        className="px-6 py-2 cursor-pointer rounded-xl bg-[#ff7b00] text-white hover:opacity-90"
                     >
                         Edit Category
                     </button>

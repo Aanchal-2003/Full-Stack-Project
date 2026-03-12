@@ -17,7 +17,12 @@ const create = async (req, res) => {
 
 const get = async (req, res) => {
     try {
-        const color = await colorModel.find()
+        const query = req.query;
+        const dynamicFilter = {};
+        const limit = query.limit != null ? query.limit : 0;
+        if (query.id) dynamicFilter._id = query.id;
+        if (query.status) dynamicFilter.status = query.status == "true" ? true : false;
+        const color = await colorModel.find(dynamicFilter).limit(limit);
         return sendSuccess(res, "Color Find", color);
     } catch (error) {
         console.log(error)
@@ -68,7 +73,7 @@ const updateById = async (req, res) => {
         const { id } = req.params;
         const color = await colorModel.findById(id);
         if (!color) return sendNotFound(res);
-        await colorModel.findByIdAndUpdate({ name, slug, code });
+        await colorModel.findByIdAndUpdate(id, { name, slug, code });
         return sendUpdated(res);
     } catch (error) {
         console.log(error)

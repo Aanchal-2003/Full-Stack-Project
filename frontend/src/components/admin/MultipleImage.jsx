@@ -13,7 +13,7 @@ export default function MultipleImageAdd({ productData }) {
             payload.append("images", img)
         }
 
-        axiosAPIinstance.post(`product/otherImageAdd/${productData._id}`, payload).then(
+        axiosAPIinstance.post(`product/otherImageAdd/${productData.product?._id}`, payload).then(
             (response) => {
                 notify(response.data.message, response.data.success)
                 if (response.data.success) {
@@ -35,6 +35,13 @@ export default function MultipleImageAdd({ productData }) {
             {/* HEADER */}
             <div className="mb-6">
                 <h1 className="text-3xl font-bold">Add Images</h1>
+            </div>
+            <div className="flex gap-10 overflow-x-scroll">
+                {
+                    productData.product?.other_images.map((item, index) => {
+                        return <img key={index} width={50} height={50} src={productData.imageBaseUrl + "other/" + item} />
+                    })
+                }
             </div>
 
             {/* FORM */}

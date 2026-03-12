@@ -26,10 +26,10 @@ export default function AddProductPage() {
     const fp = useRef();
 
     async function fetchData() {
-        const category = await getCategories();
+        const {category} = await getCategories();
         const brand = await getBrand();
         const color = await getColor();
-        setCategories(category.data);
+        setCategories(category);
         setBrands(brand.data);
         setColors(color.data);
     }
@@ -40,7 +40,7 @@ export default function AddProductPage() {
         },
         []
     )
-
+    
     function generateSlug() {
         const slug = slugCreate(nameRef.current.value);
         slugRef.current.value = slug
@@ -89,14 +89,13 @@ export default function AddProductPage() {
             }
         ).catch(
             (error) => {
-                console.log(error)
                 notify(error?.response?.data?.message, false)
             }
         )
     }
 
     return (
-        <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-sm p-10">
+        <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-sm p-10">
 
             {/* HEADER */}
             <div className="mb-6">
@@ -125,7 +124,6 @@ export default function AddProductPage() {
                             />
                         </div>
                     </div>
-
                     {/* SLUG */}
                     <div>
                         <label className="text-sm font-medium text-gray-600">
@@ -193,11 +191,9 @@ export default function AddProductPage() {
                         <label className="text-sm font-medium text-gray-600">
                             Description
                         </label>
-                        <div className="mt-2 flex items-center gap-3 border rounded-xl px-4 py-3 focus-within:ring-2 focus-within:ring-[#ff7b00]">
-                            <FiTag className="text-gray-400" />
-
+                        <div className="mt-2 border rounded-xl px-4 py-3 focus-within:ring-2 focus-within:ring-[#ff7b00]">
+                            {/* <FiTag className="text-gray-400" /> */}
                             <Editor className="w-full outline-none" onTextChange={(e) => setDescription(e.htmlValue)} style={{ height: '320px' }} />
-
                         </div>
                     </div>
                     <div className="col-span-2 grid grid-cols-3 gap-4">
@@ -209,13 +205,12 @@ export default function AddProductPage() {
                                 <FiTag className="text-gray-400" />
                                 <Select placeholder="Select category"
                                     className="w-full outline-none" name="categoryId" id="" options={
-                                        categories.map((cat) => {
+                                        categories?.map((cat) => {
                                             return (
                                                 { value: cat._id, label: cat.name }
                                             )
                                         })
                                     } />
-
                             </div>
                         </div>
                         <div>
@@ -226,13 +221,12 @@ export default function AddProductPage() {
                                 <FiTag className="text-gray-400" />
                                 <Select placeholder="Select brand"
                                     className="w-full outline-none" name="brandId" id="" options={
-                                        brands.map((br) => {
+                                        brands?.map((br) => {
                                             return (
                                                 { value: br._id, label: br.name }
                                             )
                                         })
                                     } />
-
                             </div>
                         </div>
                         <div>
@@ -243,7 +237,7 @@ export default function AddProductPage() {
                                 <FiTag className="text-gray-400" />
                                 <Select isMulti closeMenuOnSelect={false} onChange={colorIdSet} placeholder="Select colors"
                                     className="w-full outline-none" name="" id="" options={
-                                        colors.map((color) => {
+                                        colors?.map((color) => {
                                             return (
                                                 { value: color._id, label: color.name }
                                             )
@@ -252,9 +246,7 @@ export default function AddProductPage() {
                             </div>
                         </div>
                     </div>
-
                 </div>
-
 
                 {/* PRODUCT IMAGE */}
                 <div>

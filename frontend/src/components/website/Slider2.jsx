@@ -28,7 +28,7 @@ export default () => {
             onSwiper={(swiper) => console.log(swiper)}
         >
             <SwiperSlide>
-                <div className='flex flex-col justify-center items-center  gap-4'>
+                <div className='flex flex-col justify-center items-center gap-4'>
                     <img className='w-[200px] h-[200px]' src="/images/product.png" alt="" />
                     <span className='text-[#666666] text-[13px]'>(152)</span>
                     <h2 className='font-bold text-[14px]'>BOSO 2 Wireless On Ear <br />Headphone</h2>

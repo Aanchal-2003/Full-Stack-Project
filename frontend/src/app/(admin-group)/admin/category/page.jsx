@@ -5,7 +5,7 @@ import StatusBadge from "@/components/admin/StatusBadge";
 import DeleteBtn from "@/components/admin/DeleteBtn";
 
 export default async function page() {
-    const categories = await getCategories();
+    const categoriesData = await getCategories();
     return (
         <div className="bg-white rounded-2xl shadow p-6">
             {/* HEADER */}
@@ -42,14 +42,14 @@ export default async function page() {
 
                     <tbody>
                         {
-                            categories &&
-                            categories?.data.map((cat) => (
+                            categoriesData.category &&
+                            categoriesData?.category.map((cat) => (
                                 <tr
                                     key={cat._id}
                                     className="border-t hover:bg-orange-50 transition"
                                 >
                                     <td className="p-4 font-medium">
-                                        <img className="w-10 h-10 rounded-md" src={process.env.NEXT_PUBLIC_CATEGORY_IMAGE_URL + cat.image} alt={cat.name} />
+                                        <img className="w-10 h-10 rounded-md" src={categoriesData?.imageBaseUrl + cat.image} alt={cat.name} />
                                     </td>
                                     <td className="p-4 font-medium">
                                         {cat.name}

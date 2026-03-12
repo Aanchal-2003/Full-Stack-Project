@@ -1,4 +1,5 @@
 const brandModel = require("../models/brand.models");
+const productModel = require("../models/product.models");
 const { uniqueName } = require("../utils/helper");
 const { sendServerError, sendAllFieldsRequired, sendCreated, sendNotFound, sendSuccess, sendUpdated, sendDeleted, sendAlreadyExist } = require("../utils/responseHelpers");
 const fs = require("fs");
@@ -28,8 +29,27 @@ const create = async (req, res) => {
 
 const get = async (req, res) => {
     try {
-        const brand = await brandModel.find();
-        return sendSuccess(res, "Brand Find", brand);
+        const query = req.query;
+        const dynamicFilter = {};
+        const limit = query.limit != null ? query.limit : 0;
+        if (query.id) dynamicFilter._id = query.id;
+        if (query.status) dynamicFilter.status = query.status == "true" ? true : false;
+        if (query.is_home) dynamicFilter.is_home = query.is_home == "true" ? true : false;
+        if (query.is_best) dynamicFilter.is_best = query.is_best == "true" ? true : false;
+        if (query.is_top) dynamicFilter.is_top = query.is_top == "true" ? true : false;
+        const brand = await brandModel.find(dynamicFilter).limit(limit);
+
+        const data = await Promise.all(
+            brand.map(
+                async (br) => {
+                    const productCount = await productModel.countDocuments({ brand_id: br._id });
+                    return {
+                        ...br._doc,
+                        count: productCount
+                    }
+                })
+        )
+        return sendSuccess(res, "Brand Find", data);
 
     } catch (error) {
         console.log(error)
