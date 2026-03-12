@@ -42,8 +42,7 @@ export default async function page() {
 
                     <tbody>
                         {
-                            brand &&
-                            brand?.data.map((br) => (
+                            (brand?.data || []).map((br) => (
                                 <tr
                                     key={br._id}
                                     className="border-t hover:bg-orange-50 transition"
