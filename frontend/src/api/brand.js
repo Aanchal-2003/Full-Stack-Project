@@ -25,9 +25,9 @@ const getBrand = (queryObject = {}) => {
     return axiosAPIinstance.get(`brand/?${query.toString()}`).then(
         (response) => {
             if (response.data.success == true) {
-                return response.data
+                return response.data.data
             } else {
-                return []
+                return { brand: [], imageBaseUrl: "" }
             }
         }
     ).catch(

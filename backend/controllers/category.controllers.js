@@ -50,7 +50,7 @@ const get = async (req, res) => {
                 }
             })
         )
-        return sendSuccess(res, "Category Find", { category:data, imageBaseUrl: "http://localhost:5000/images/category/" });
+        return sendSuccess(res, "Category Find", { category:data, imageBaseUrl: "/_/backend/images/category/" });
     } catch (error) {
         return sendServerError(res);
     }

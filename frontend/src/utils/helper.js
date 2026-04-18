@@ -15,8 +15,10 @@ function slugCreate(name) {
     return slug
 }
 
+const apiBaseURL = process.env.NEXT_PUBLIC_API_BASE_URL || "/_/backend/";
+
 const axiosAPIinstance = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+    baseURL: apiBaseURL,
     withCredentials: true
 });
 

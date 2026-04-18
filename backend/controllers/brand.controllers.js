@@ -49,7 +49,7 @@ const get = async (req, res) => {
                     }
                 })
         )
-        return sendSuccess(res, "Brand Find", data);
+        return sendSuccess(res, "Brand Find", { brand: data, imageBaseUrl: "/_/backend/images/brand/" });
 
     } catch (error) {
         console.log(error)

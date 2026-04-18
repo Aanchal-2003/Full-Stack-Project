@@ -15,11 +15,11 @@ export default async function Featured() {
       </div>
       <div className='flex gap-4 justify-center items-center mt-4 '>
         {
-          brandData?.data?.map((brand) => {
+          brandData?.brand?.map((brand) => {
             return (
               <Link key={brand._id} href={`/store?brandSlug=${brand.slug}`}>
                 <div className='shadow p-4 rounded cursor-pointer hover:scale-110 transition-all duration-300 flex flex-col justify-center items-center bg-white border border-transparent hover:border-gray-200'>
-                  <img className='w-15 h-15 rounded-md object-contain' src={process.env.NEXT_PUBLIC_BRAND_IMAGE_URL + brand.image} alt={brand.name} />
+                  <img className='w-15 h-15 rounded-md object-contain' src={brandData?.imageBaseUrl + brand.image} alt={brand.name} />
                 </div>
               </Link>
             )

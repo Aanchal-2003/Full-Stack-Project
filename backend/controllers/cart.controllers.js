@@ -10,7 +10,7 @@ const cartSync = async (req, res) => {
                 message: "User Cart Found",
                 cart: await cartModel.find({ userId }).populate('productId'),
                 success: true,
-                imageBaseUrl: "http://localhost:5000/images/product/main/"
+                imageBaseUrl: "/_/backend/images/product/main/"
             })
         }
 
@@ -40,7 +40,7 @@ const cartSync = async (req, res) => {
             message: "User Cart Found",
             cart: await cartModel.find({ userId }).populate('productId'),
             success: true,
-            imageBaseUrl: "http://localhost:5000/images/product/main/"
+            imageBaseUrl: "/_/backend/images/product/main/"
         })
 
     } catch (error) {
@@ -77,7 +77,7 @@ const addToCart = async (req, res) => {
             success: true,
             message: "User Cart Found",
             cart: await cartModel.find({ userId }).populate('productId'),
-            imageBaseUrl: "http://localhost:5000/images/product/main/"
+            imageBaseUrl: "/_/backend/images/product/main/"
         })
 
     } catch (error) {

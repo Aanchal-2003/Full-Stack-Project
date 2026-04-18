@@ -86,7 +86,7 @@ const get = async (req, res) => {
             }
         ]).sort(sortFilter).limit(limit);
         
-        return sendSuccess(res, "Product Find", { product, imageBaseUrl: "http://localhost:5000/images/product/" });
+        return sendSuccess(res, "Product Find", { product, imageBaseUrl: "/_/backend/images/product/" });
     } catch (error) {
         return sendServerError(res);
     }
@@ -136,7 +136,7 @@ const getById = async (req, res) => {
         const id = req.params.id;
         const product = await productModel.findById(id);
         if (!product) return sendNotFound(res);
-        return sendSuccess(res, "Product Find", { product, imageBaseUrl: "http://localhost:5000/images/product/" });
+        return sendSuccess(res, "Product Find", { product, imageBaseUrl: "/_/backend/images/product/" });
     } catch (error) {
         return sendServerError(res)
     }
