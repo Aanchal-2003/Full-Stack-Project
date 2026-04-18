@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 
 export default function PreOrder() {
     return (
@@ -14,7 +15,9 @@ export default function PreOrder() {
                 <span className=' text-[12px]'>Series 8</span>
                 <h2 className='text-[30px]'> A healthy leap ahead</h2>
             </div>
-            <button className='bg-white rounded-full p-4'>Discover Now</button>
+            <Link href="/store">
+                <button className='bg-white rounded-full p-4 hover:bg-gray-100 transition-colors cursor-pointer'>Discover Now</button>
+            </Link>
         </div>
     )
 }

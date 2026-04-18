@@ -8,7 +8,9 @@ export default async function TopCategories() {
         <div className="bg-white mt-3 md:mt-0 shadow-md rounded-2xl p-4">
             <div className='flex justify-between'>
                 <h2 className='uppercase font-bold text-[18px] '>top categories</h2>
-                <span className='text-[#666666] text-[13px] hover:text-[#01A49E] cursor-pointer'>View All</span>
+                <Link href="/store">
+                    <span className='text-[#666666] text-[13px] hover:text-[#01A49E] cursor-pointer'>View All</span>
+                </Link>
             </div>
 
             <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>

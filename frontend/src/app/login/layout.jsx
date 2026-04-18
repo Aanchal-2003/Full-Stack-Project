@@ -1,13 +1,7 @@
-import "../globals.css";
-
-export default function RootLayout({ children }) {
+export default function LoginLayout({ children }) {
   return (
-    <html lang="en">
-      <body>
-        <main className="p-6">
-          {children}
-        </main>
-      </body>
-    </html>
+    <main className="p-6">
+      {children}
+    </main>
   );
 }

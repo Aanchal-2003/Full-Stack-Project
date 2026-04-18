@@ -13,7 +13,9 @@ export default async function storePage({ searchParams }) {
     const max_price = await promiseResolve?.max_price ?? null;
     const limit = await promiseResolve?.limit ?? null;
     const sort = await promiseResolve?.sort ?? null;
-    const productData = await getproduct({ status: true, color_ids, brandSlug, min_price, max_price, limit, sort })
+    const name = await promiseResolve?.name ?? null;
+    const categorySlug = await promiseResolve?.categorySlug ?? null;
+    const productData = await getproduct({ status: true, color_ids, brandSlug, min_price, max_price, limit, sort, name, categorySlug })
     return (
         <>
             <div className='grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 '>

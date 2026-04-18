@@ -1,4 +1,4 @@
-import React from "react";
+import Link from "next/link";
 import AddToCartButton from "./AddToCartButton";
 
 const ProductCard = ({ product, imageBaseUrl, user }) => {
@@ -35,43 +35,45 @@ const ProductCard = ({ product, imageBaseUrl, user }) => {
                 </span>
             )}
 
-            {/* IMAGE */}
-            <div className="h-40 bg-gray-50 flex items-center justify-center overflow-hidden">
-                <img
-                    src={imageUrl}
-                    alt={product.name}
-                    className="h-full object-contain transition-transform duration-300 group-hover:scale-110"
-                />
-            </div>
-
-            {/* Content */}
-            <div className="p-4">
-
-                {/* Title */}
-                <h3 className="text-sm font-semibold text-gray-800 line-clamp-2">
-                    {product?.name}
-                </h3>
-
-                {/* Price*/}
-                <div className="flex items-center gap-2">
-                    <span className="text-base font-semibold text-gray-900">
-                        ₹{product?.final_price}
-                    </span>
-
-                    {product?.original_price && (
-                        <span className="text-sm line-through text-gray-400">
-                            ₹{product?.original_price}
-                        </span>
-                    )}
-
-                    {/* STOCK */}
-                    {!product.stock && (
-                        <p className="text-xs text-red-500 font-medium">
-                            Out of Stock
-                        </p>
-                    )}
+            <Link href={`/product/${product._id}`}>
+                {/* IMAGE */}
+                <div className="h-40 bg-gray-50 flex items-center justify-center overflow-hidden cursor-pointer">
+                    <img
+                        src={imageUrl}
+                        alt={product.name}
+                        className="h-full object-contain transition-transform duration-300 group-hover:scale-110"
+                    />
                 </div>
-            </div>
+
+                {/* Content */}
+                <div className="p-4 cursor-pointer">
+
+                    {/* Title */}
+                    <h3 className="text-sm font-semibold text-gray-800 line-clamp-2 hover:text-[#01A49E] transition-colors">
+                        {product?.name}
+                    </h3>
+
+                    {/* Price*/}
+                    <div className="flex items-center gap-2 mt-1">
+                        <span className="text-base font-semibold text-gray-900">
+                            ₹{product?.final_price?.toLocaleString()}
+                        </span>
+
+                        {product?.original_price > product?.final_price && (
+                            <span className="text-sm line-through text-gray-400">
+                                ₹{product?.original_price?.toLocaleString()}
+                            </span>
+                        )}
+
+                        {/* STOCK */}
+                        {!product.stock && (
+                            <p className="text-xs text-red-500 font-medium">
+                                Out of Stock
+                            </p>
+                        )}
+                    </div>
+                </div>
+            </Link>
             <AddToCartButton id={product._id} user={user} name={product.name} image={imageUrl} final_price={product.final_price} original_price={product.original_price} />
         </div >
     );

@@ -6,6 +6,6 @@ userRouter.post("/register", register);
 userRouter.post("/login", login);
 userRouter.get("/me", authMiddleware, getMe);
 userRouter.get("/logout", logout);
-userRouter.post("/address/:id", addressAdd);
+userRouter.post("/address/:id", authMiddleware, addressAdd);
 
 module.exports = userRouter;

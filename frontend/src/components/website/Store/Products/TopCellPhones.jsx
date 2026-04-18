@@ -35,7 +35,7 @@ export default function TopCellPhones() {
 
                             {/* Image */}
                             <img
-                                src="https://images.unsplash.com/photo-1618367581583-1b6c5f5c3d7f"
+                                src="/images/headphone_banner.png"
                                 alt="Headphone"
                                 className="absolute right-0 top-0 h-full object-cover"
                             />
@@ -47,32 +47,27 @@ export default function TopCellPhones() {
                         </div>
 
                         {/* Right Small Banner */}
-                        <div className="rounded-xl overflow-hidden bg-linear-to-b from-[#dcdff1] to-[#f3d7a6] p-6 flex flex-col justify-between">
-                            <div className="flex justify-between">
-                                <div>
-                                    <h3 className="text-xl font-semibold leading-tight mb-2">
-                                        redmi note 12 <br /> Pro+ 5g
-                                    </h3>
-                                    <p className="text-sm text-gray-600">
-                                        Rise to the challenge
-                                    </p>
-                                </div>
-                                <button className="bg-black max-w-50 max-h-10 text-white text-xs px-4 py-2 rounded-full hover:bg-gray-800 transition">
+                        <div className="rounded-xl overflow-hidden bg-linear-to-b from-[#dcdff1] to-[#f3d7a6] p-8 flex items-center justify-between group cursor-pointer transition-all hover:shadow-lg">
+                            <div className="flex-1 pr-4 z-10">
+                                <h3 className="text-xl font-bold leading-tight mb-2 text-gray-900">
+                                    redmi note 12 <br /> Pro+ 5g
+                                </h3>
+                                <p className="text-sm text-gray-600 mb-6 italic">
+                                    Rise to the challenge
+                                </p>
+                                <button className="bg-black text-white text-[10px] px-5 py-2 rounded-full font-bold uppercase tracking-wider hover:bg-gray-800 transition-colors">
                                     SHOP NOW
                                 </button>
                             </div>
 
-
-                            <div className="flex justify-between items-end mt-4">
+                            <div className="relative">
                                 <img
-                                    src="https://i.imgur.com/7Qp.png"
+                                    src="/images/redmi_banner.png"
                                     alt="Phone"
-                                    className="h-40 object-contain"
+                                    className="h-44 w-auto object-contain transition-transform duration-500 group-hover:scale-105"
+                                    style={{ filter: "drop-shadow(0 10px 15px rgba(0,0,0,0.1))" }}
                                 />
-
-
                             </div>
-
                         </div>
 
                     </div>

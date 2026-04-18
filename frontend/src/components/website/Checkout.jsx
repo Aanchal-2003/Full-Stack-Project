@@ -1,9 +1,9 @@
 'use client'
 
-import { axiosAPIinstance, formatIndianCurrency } from "@/utils/helper";
+import { axiosAPIinstance, formatIndianCurrency, notify } from "@/utils/helper";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { FaPlus, FaHome, FaMoneyBillWave, FaCreditCard } from "react-icons/fa";
+import { useState, useEffect } from "react";
+import { FaPlus, FaHome, FaMoneyBillWave, FaCreditCard, FaTimes } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { useRazorpay } from "react-razorpay";
 import { removeToCart } from "@/redux/reducers/cartReducer";
@@ -17,15 +17,70 @@ export default function CheckoutPage({ user }) {
     const router = useRouter()
     const cart = useSelector((store) => store.cart);
     const [selectedAddress, setSelectedAddress] = useState(0);
+    const [addresses, setAddresses] = useState(user?.shipping_address || []);
     const [paymentMethod, setPaymentMethod] = useState(0);  //0 COD //1 -Online
+    const [showAddressForm, setShowAddressForm] = useState(false);
 
+    useEffect(() => {
+        if (user?.shipping_address) {
+            setAddresses(user.shipping_address);
+        }
+    }, [user]);
+    const [addressFormData, setAddressFormData] = useState({
+        addressLine1: "",
+        addressLine2: "",
+        city: "",
+        state: "",
+        postalCode: "",
+        country: "",
+        contact: ""
+    });
 
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setAddressFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleAddressSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axiosAPIinstance.post(`/user/address/${user._id}`, addressFormData);
+            if (response.data.success) {
+                notify("Address added successfully", true);
+                setShowAddressForm(false);
+                setAddressFormData({
+                    addressLine1: "",
+                    addressLine2: "",
+                    city: "",
+                    state: "",
+                    postalCode: "",
+                    country: "",
+                    contact: ""
+                });
+                
+                // Update local state with the new list of addresses
+                if (response.data.data) {
+                    setAddresses(response.data.data);
+                } else {
+                    router.refresh();
+                }
+            } else {
+                notify(response.data.message || "Failed to add address", false);
+            }
+        } catch (err) {
+            console.log(err);
+            notify("Something went wrong", false);
+        }
+    };
 
     function orderHandler() {
+        if (addresses.length === 0) {
+            return notify("Please add a shipping address", false);
+        }
         axiosAPIinstance.post("/order/create", {
             user_id: user._id,
             paymentMethod: paymentMethod,
-            shipping_address: user.shipping_address[selectedAddress]
+            shipping_address: addresses[selectedAddress]
         }).then((response) => {
             console.log(response);
             if (response.data.success) {
@@ -34,11 +89,11 @@ export default function CheckoutPage({ user }) {
                 } else {
 
                     const options = {
-                        key: "rzp_test_hYGOo0vBKlVRkD",
+                        key: "rzp_test_Sa7u3XCPVwcAoe", // Using the key from your backend .env
                         currency: "INR",
                         name: "Sonam PVT LTD",
-                        description: "Test Transaction",
-                        order_id: response.data.razorpay_order_id, // Generate order_id on server
+                        description: "Transaction for Order #" + response.data.order_id,
+                        order_id: response.data.razorpay_order_id,
                         handler: (Razorpayresponse) => {
                             axiosAPIinstance.post("order/success",
                                 {
@@ -62,12 +117,12 @@ export default function CheckoutPage({ user }) {
                             )
                         },
                         prefill: {
-                            name: user.name,
-                            email: user.email,
-                            contact: "7412890651",
+                            name: user?.name || "Guest User",
+                            email: user?.email || "guest@example.com",
+                            contact: user?.shipping_address?.[selectedAddress]?.contact || "7412890651",
                         },
                         theme: {
-                            color: "#F37254",
+                            color: "#0D9488", // Teal color to match your theme
                         },
                     };
 
@@ -92,9 +147,119 @@ export default function CheckoutPage({ user }) {
 
                     {/* Add Address */}
                     <div className="bg-white p-5 rounded-xl shadow">
-                        <button className="flex items-center gap-2 text-blue-600 font-semibold hover:underline">
-                            <FaPlus /> Add New Address
-                        </button>
+                        {!showAddressForm ? (
+                            <button
+                                onClick={() => setShowAddressForm(true)}
+                                className="flex items-center gap-2 text-blue-600 font-semibold hover:underline"
+                            >
+                                <FaPlus /> Add New Address
+                            </button>
+                        ) : (
+                            <div className="space-y-4">
+                                <div className="flex justify-between items-center">
+                                    <h2 className="text-lg font-semibold">Enter New Address</h2>
+                                    <button onClick={() => setShowAddressForm(false)} className="text-gray-500 hover:text-red-500">
+                                        <FaTimes />
+                                    </button>
+                                </div>
+                                <form onSubmit={handleAddressSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="md:col-span-2">
+                                        <label className="block text-sm font-medium text-gray-700">Address Line 1</label>
+                                        <input
+                                            type="text"
+                                            name="addressLine1"
+                                            value={addressFormData.addressLine1}
+                                            onChange={handleInputChange}
+                                            required
+                                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                            placeholder="House No, Building Name"
+                                        />
+                                    </div>
+                                    <div className="md:col-span-2">
+                                        <label className="block text-sm font-medium text-gray-700">Address Line 2</label>
+                                        <input
+                                            type="text"
+                                            name="addressLine2"
+                                            value={addressFormData.addressLine2}
+                                            onChange={handleInputChange}
+                                            required
+                                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                            placeholder="Street Name, Area"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700">City</label>
+                                        <input
+                                            type="text"
+                                            name="city"
+                                            value={addressFormData.city}
+                                            onChange={handleInputChange}
+                                            required
+                                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700">State</label>
+                                        <input
+                                            type="text"
+                                            name="state"
+                                            value={addressFormData.state}
+                                            onChange={handleInputChange}
+                                            required
+                                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700">Postal Code</label>
+                                        <input
+                                            type="text"
+                                            name="postalCode"
+                                            value={addressFormData.postalCode}
+                                            onChange={handleInputChange}
+                                            required
+                                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700">Country</label>
+                                        <input
+                                            type="text"
+                                            name="country"
+                                            value={addressFormData.country}
+                                            onChange={handleInputChange}
+                                            required
+                                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700">Contact Number</label>
+                                        <input
+                                            type="text"
+                                            name="contact"
+                                            value={addressFormData.contact}
+                                            onChange={handleInputChange}
+                                            required
+                                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                        />
+                                    </div>
+                                    <div className="md:col-span-2 flex gap-4">
+                                        <button
+                                            type="submit"
+                                            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-xl"
+                                        >
+                                            Save Address
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowAddressForm(false)}
+                                            className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 rounded-xl"
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        )}
                     </div>
 
                     {/* Saved Addresses */}
@@ -102,34 +267,35 @@ export default function CheckoutPage({ user }) {
                         <h2 className="text-lg font-semibold mb-4">Select Delivery Address</h2>
 
                         <div className="space-y-4">
-                            {user?.shipping_address?.map((item, index) => (
-                                <div
-                                    key={index}
-                                    onClick={() => setSelectedAddress(index)}
-                                    className={`border rounded-xl p-4 cursor-pointer transition ${selectedAddress === index
-                                        ? "border-blue-600 bg-blue-50"
-                                        : "border-gray-200 hover:border-blue-400"
-                                        }`}
-                                >
-                                    <div className="flex justify-between items-start">
-                                        <div>
-
-                                            <p className="text-sm text-gray-600 mt-1">
-                                                {item.addressLine1}
-                                            </p>
-                                            <p className="text-sm text-gray-600 mt-1">
-                                                {item.addressLine2} -{item.city}- <br /> {item.country}-{item.
-                                                    postalCode} -{item.state}
-                                            </p>
-                                            <p className="text-sm text-gray-600 mt-1">
-                                                Phone: {item.contact}
-                                            </p>
+                            {(!addresses || addresses.length === 0) ? (
+                                <p className="text-gray-500 text-center py-4">No addresses saved. Please add a new address.</p>
+                            ) : (
+                                addresses?.map((item, index) => (
+                                    <div
+                                        key={index}
+                                        onClick={() => setSelectedAddress(index)}
+                                        className={`border rounded-xl p-4 cursor-pointer transition ${selectedAddress === index
+                                            ? "border-blue-600 bg-blue-50"
+                                            : "border-gray-200 hover:border-blue-400"
+                                            }`}
+                                    >
+                                        <div className="flex justify-between items-start">
+                                            <div>
+                                                <p className="text-sm text-gray-600 mt-1">
+                                                    {item.addressLine1}
+                                                </p>
+                                                <p className="text-sm text-gray-600 mt-1">
+                                                    {item.addressLine2} -{item.city}- <br /> {item.country}-{item.
+                                                        postalCode} -{item.state}
+                                                </p>
+                                                <p className="text-sm text-gray-600 mt-1">
+                                                    Phone: {item.contact}
+                                                </p>
+                                            </div>
                                         </div>
-
-
                                     </div>
-                                </div>
-                            ))}
+                                ))
+                            )}
                         </div>
                     </div>
 
@@ -200,4 +366,4 @@ export default function CheckoutPage({ user }) {
             </div>
         </div>
     );
-}
+}

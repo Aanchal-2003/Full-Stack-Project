@@ -9,6 +9,11 @@ const register = async (req, res) => {
     try {
         const { name, email, password } = req.body;
         if (!name || !email || !password) return sendAllFieldsRequired(res);
+        
+        // Check if user already exists
+        const isUserExist = await UserModel.findOne({ email });
+        if (isUserExist) return sendAlreadyExist(res, "Email already in use");
+
         const encryptedPass = cryptr.encrypt(password);
         await UserModel.create({ name, email, password: encryptedPass });
         return sendCreated(res, "User Account Created");
@@ -58,19 +63,21 @@ const getMe = async (req, res, next) => {
 // address add api
 const addressAdd = async (req, res) => {
     try {
-        const userId = req.params.id;
+        const userId = req.user._id;
+        const { addressLine1, addressLine2, city, state, postalCode, country } = req.body;
+        
+        if (!addressLine1 || !addressLine2 || !city || !state || !postalCode || !country) {
+            return sendAllFieldsRequired(res);
+        }
+
         const userData = await UserModel.findByIdAndUpdate(
             userId,
             { $push: { shipping_address: { ...req.body } } },
             { new: true }
         )
-        res.status(200).json({
-            success: true,
-            message: "Address added"
-        });
+        return sendSuccess(res, "Address added successfully", userData.shipping_address);
     } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "Server error" });
+        return sendServerError(res, err);
     }
 };
 

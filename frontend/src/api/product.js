@@ -11,6 +11,10 @@ const getproduct = (queryObject = {}) => {
         query.append("status", queryObject.status)
     }
 
+    if (queryObject.name) {
+        query.append("name", queryObject.name)
+    }
+
     if (queryObject.is_home) {
         query.append("is_home", queryObject.is_home)
     }

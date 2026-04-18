@@ -15,7 +15,7 @@ app.use("/color", require("./routers/color.router"));
 app.use("/product", require("./routers/product.router"));
 app.use("/user", require("./routers/user.router"));
 app.use("/cart", require("./routers/cart.router"));
-// app.use("/order", require("./routers/order.router"));
+app.use("/order", require("./routers/order.router"));
 
 mongoose.connect(process.env.DATABASE_URL).then(
     () => {

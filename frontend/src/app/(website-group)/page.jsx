@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import CategorySection from '@/components/website/Home/CategorySection';
 import HeroSection from '@/components/website/Home/HeroSection';
 import Featured from '@/components/website/Home/Featured';
@@ -8,7 +9,6 @@ import PreOrder from '@/components/website/Home/PreOrder';
 import BestSeller from '@/components/website/Home/BestSeller';
 import TopCellphones from '@/components/website/Home/TopCellphones';
 import BestLaptops from '@/components/website/Home/BestLaptops';
-import Audio from '@/components/website/Home/Audio';
 import RecentlyViewed from '@/components/website/Home/RecentlyViewed';
 
 export default function page() {
@@ -31,17 +31,6 @@ export default function page() {
         <BestSeller />
         <TopCellphones />
         <BestLaptops />
-        <Audio />
-        
-        <div className='grid grid-cols-2 gap-6 mt-10'>
-          <div>
-            <img className='w-[646px] h-[180px] rounded-2xl' src="/images/mobile2.png" alt="" />
-          </div>
-          <div>
-            <img className='w-[646px] h-[180px] rounded-2xl' src="/images/mobile2.png" alt="" />
-          </div>
-        </div>
-
         <RecentlyViewed />
 
         <div className='flex flex-col gap-10 mt-10 mb-10 py-6 px-4'>
@@ -53,7 +42,9 @@ export default function page() {
             ante maximus. Vestibulum at nibh ac odio ultrices varius. Duis vitae libero mollis, lobortis ligula id, varius erat. Sed id odio dictum, laoreet enim ac, commodo magna. Praesent sodales porttitor <br />
             maximus. Sed a lacus felis. Maecenas consectetur consequat orci scelerisque malesuada. Fusce vel orci eu tortor consequat mattis quis at ante. Class aptent taciti sociosqu ad litora <br />
             torquent per conubi,</p>
-          <span className='text-[13px]'>View All</span>
+          <Link href="/store">
+            <span className='text-[13px] hover:text-[#01A49E] cursor-pointer font-bold'>View All</span>
+          </Link>
         </div>
       </div>
     </div>

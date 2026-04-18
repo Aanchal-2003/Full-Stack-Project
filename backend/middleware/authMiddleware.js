@@ -4,7 +4,7 @@ const { sendNotFound } = require('../utils/responseHelpers');
 
 async function authMiddleware(req, res, next) {
     try {
-        const token = req.headers.authorization;
+        const token = req.headers.authorization || req.cookies.user_token;
         if (!token) {
             return res.status(401).json({
                 success: false,

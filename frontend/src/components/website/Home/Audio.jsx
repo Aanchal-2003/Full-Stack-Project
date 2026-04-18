@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 
 const feature = [
     {
@@ -22,7 +23,9 @@ export default function Audio() {
             <div className='col-span-2 bg-white rounded-2xl px-5 py-4  '>
                 <div className='flex justify-between'>
                     <h2 className='text-[18px] font-bold'>Audios & Cameras</h2>
-                    <span className='text-[#666666] text-[13px]'>View All</span>
+                    <Link href="/store">
+                        <span className='text-[#666666] text-[13px] hover:text-[#01A49E] cursor-pointer'>View All</span>
+                    </Link>
                 </div>
                 <div className='bg-[url(/images/speaker.png)] mt-5'>
                     <h2 className='text-[14px] font-bold text-white px-8 py-15 '>Best <br /> Speaker <br /> 2023</h2>
@@ -45,7 +48,9 @@ export default function Audio() {
             <div className='col-span-2 bg-white rounded-2xl px-5 py-4  '>
                 <div className='flex justify-between'>
                     <h2 className='text-[18px] font-bold'>Audios & Cameras</h2>
-                    <span className='text-[#666666] text-[13px]'>View All</span>
+                    <Link href="/store">
+                        <span className='text-[#666666] text-[13px] hover:text-[#01A49E] cursor-pointer'>View All</span>
+                    </Link>
                 </div>
                 <div className='bg-[url(/images/speaker.png)] mt-5'>
                     <h2 className='text-[14px] font-bold text-white px-8 py-15 '>Best <br /> Speaker <br /> 2023</h2>
@@ -69,7 +74,9 @@ export default function Audio() {
             <div className='col-span-2 bg-white rounded-2xl px-5 py-4  '>
                 <div className='flex justify-between'>
                     <h2 className='text-[18px] font-bold'>Audios & Cameras</h2>
-                    <span className='text-[#666666] text-[13px]'>View All</span>
+                    <Link href="/store">
+                        <span className='text-[#666666] text-[13px] hover:text-[#01A49E] cursor-pointer'>View All</span>
+                    </Link>
                 </div>
                 <div className='bg-[url(/images/speaker.png)] mt-5'>
                     <h2 className='text-[14px] font-bold text-white px-8 py-15 '>Best <br /> Speaker <br /> 2023</h2>
